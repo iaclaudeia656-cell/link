@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0F172A">
+  <meta name="description" content="Link - App de rastreo de buses en tiempo real. Conecta pasajeros y conductores con ubicación en vivo.">
+  <title>Link - Rastreo de buses en tiempo real</title>
+  <style>
+    :root {
+      --bg: #0F172A;
+      --bg-soft: #111C34;
+      --bg-card: #16233F;
+      --bg-card-2: #1B2948;
+      --border: rgba(148, 163, 184, 0.14);
+      --border-strong: rgba(148, 163, 184, 0.24);
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --muted-2: #CBD5E1;
+      --primary: #3B82F6;
+      --primary-soft: rgba(59, 130, 246, 0.14);
+      --green: #22C55E;
+      --green-soft: rgba(34, 197, 94, 0.12);
+      --shadow: 0 20px 50px rgba(2, 6, 23, 0.35);
+      --radius: 20px;
+      --radius-sm: 14px;
+      --max: 1120px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 45% at 50% -5%, rgba(59,130,246,0.16), transparent 60%),
+        radial-gradient(ellipse 40% 30% at 85% 10%, rgba(34,197,94,0.08), transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    img, svg { display: block; flex-shrink: 0; }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(100% - 32px, var(--max)); margin-inline: auto; position: relative; z-index: 1; }
+
+    /* Nav */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.72);
+      border-bottom: 1px solid rgba(148,163,184,0.08);
+    }
+    .nav-inner {
+      width: min(100% - 32px, var(--max)); margin-inline: auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 14px 0;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em;
+    }
+    .brand-logo {
+      width: 38px; height: 38px; border-radius: 10px;
+      object-fit: contain; display: block; flex-shrink: 0;
+    }
+    .nav-links { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav-links a {
+      color: var(--muted-2); font-size: 0.9rem; font-weight: 500;
+      padding: 8px 12px; border-radius: 10px; transition: .2s;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(148,163,184,0.08); }
+    .nav-cta {
+      background: var(--primary) !important; color: #fff !important;
+      font-weight: 600 !important; box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+    }
+    .nav-cta:hover { background: #2563EB !important; }
+
+    /* Sections */
+    section { padding: 72px 0; position: relative; z-index: 1; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: #60A5FA; margin-bottom: 14px;
+    }
+    .section-label::before {
+      content: ""; width: 28px; height: 2px; background: #60A5FA; border-radius: 2px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1.15; letter-spacing: -0.03em; font-weight: 800;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      color: var(--muted); font-size: 1.02rem; max-width: 680px;
+    }
+    .section-head { margin-bottom: 36px; }
+
+    /* Hero */
+    .hero { padding: 72px 0 56px; }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 14px; border-radius: 999px;
+      background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+      color: #93C5FD; font-size: 0.82rem; font-weight: 600; margin-bottom: 20px;
+    }
+    .hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(34,197,94,0.15); }
+    .hero h1 {
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      line-height: 1.05; letter-spacing: -0.04em; font-weight: 800;
+      margin-bottom: 20px;
+    }
+    .hero h1 .accent { color: #60A5FA; }
+    .hero p {
+      font-size: 1.08rem; color: var(--muted); max-width: 600px; margin-bottom: 28px;
+    }
+    .hero-actions { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+    .version-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: var(--muted);
+      padding: 6px 0;
+    }
+    .version-pill span { color: var(--muted-2); }
+    .version-pill .v-badge {
+      background: rgba(34,197,94,0.12); color: #4ADE80;
+      padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 0.78rem;
+    }
+
+    /* Download button */
+    .download-btn {
+      display: flex; align-items: center; gap: 16px;
+      width: 100%; max-width: 420px;
+      padding: 16px 20px;
+      background: linear-gradient(180deg, #1E293B 0%, #182338 100%);
+      border: 1px solid rgba(148,163,184,0.22);
+      border-radius: 18px;
+      color: var(--text);
+      cursor: pointer;
+      transition: transform .2s, border-color .2s, box-shadow .2s, background .2s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04);
+      text-align: left;
+    }
+    .download-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(148,163,184,0.38);
+      background: linear-gradient(180deg, #24344D 0%, #1C2A42 100%);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .download-btn:active { transform: translateY(0); }
+    .download-btn .android-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      display: grid; place-items: center;
+    }
+    .download-btn .btn-text { flex: 1; min-width: 0; }
+    .download-btn .btn-title {
+      display: block; font-size: 1.05rem; font-weight: 700; color: #fff;
+      letter-spacing: -0.01em; line-height: 1.3;
+    }
+    .download-btn .btn-sub {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 4px; font-size: 0.82rem; color: #94A3B8; font-weight: 500;
+    }
+    .download-btn .btn-sub svg { flex-shrink: 0; }
+    .download-btn .arrow {
+      color: #64748B; transition: transform .2s, color .2s;
+    }
+    .download-btn:hover .arrow { color: #94A3B8; transform: translateX(3px); }
+
+    /* Hero visual */
+    .hero-visual {
+      background: linear-gradient(180deg, rgba(30,41,59,0.7), rgba(22,35,63,0.7));
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-visual::after {
+      content: ""; position: absolute; top: -60px; right: -60px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,0.2), transparent 70%);
+      pointer-events: none;
+    }
+    .mock-map {
+      background: #0B1629;
+      border: 1px solid rgba(148,163,184,0.1);
+      border-radius: 20px;
+      height: 280px;
+      position: relative;
+      overflow: hidden;
+    }
+    .mock-map-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(148,163,184,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,184,0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .mock-road {
+      position: absolute; background: rgba(59,130,246,0.25); border-radius: 4px;
+    }
+    .mock-road.r1 { width: 65%; height: 4px; top: 45%; left: 10%; transform: rotate(-8deg); }
+    .mock-road.r2 { width: 4px; height: 55%; top: 20%; left: 55%; transform: rotate(12deg); }
+    .mock-road.r3 { width: 45%; height: 4px; top: 68%; left: 30%; transform: rotate(5deg); }
+    .mock-bus {
+      position: absolute; width: 42px; height: 42px; border-radius: 14px;
+      background: linear-gradient(135deg, #3B82F6, #2563EB);
+      display: grid; place-items: center; color: #fff;
+      box-shadow: 0 8px 24px rgba(59,130,246,0.45);
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+    .mock-bus.b1 { top: 35%; left: 22%; }
+    .mock-bus.b2 { top: 55%; left: 58%; background: linear-gradient(135deg, #22C55E, #16A34A); box-shadow: 0 8px 24px rgba(34,197,94,0.35); }
+    .mock-user {
+      position: absolute; top: 48%; left: 45%; width: 18px; height: 18px;
+      background: #F8FAFC; border-radius: 50%; border: 3px solid #3B82F6;
+      box-shadow: 0 0 0 8px rgba(59,130,246,0.15);
+    }
+    .mock-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px;
+    }
+    .mock-stat {
+      background: rgba(15,23,42,0.5); border: 1px solid rgba(148,163,184,0.08);
+      padding: 14px; border-radius: 14px; text-align: center;
+    }
+    .mock-stat .val { font-size: 1.1rem; font-weight: 800; color: #fff; }
+    .mock-stat .lbl { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    /* Cards / grids */
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    .card {
+      background: linear-gradient(180deg, rgba(30,41,59,0.55), rgba(22,35,63,0.55));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .card-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: grid; place-items: center; margin-bottom: 18px;
+      background: var(--primary-soft); color: #60A5FA;
+    }
+    .card-icon.green { background: var(--green-soft); color: #4ADE80; }
+    .card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.01em; }
+    .card p { color: var(--muted); font-size: 0.95rem; }
+
+    /* Feature list */
+    .feature-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+    .feature-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      color: var(--muted-2); font-size: 0.95rem;
+    }
+    .feature-list .check {
+      width: 22px; height: 22px; border-radius: 7px; flex-shrink: 0;
+      background: rgba(34,197,94,0.12); color: #4ADE80;
+      display: grid; place-items: center; margin-top: 1px;
+    }
+    .feature-list .check.blue { background: rgba(59,130,246,0.12); color: #60A5FA; }
+
+    /* Split section */
+    .split {
+      display: grid; grid-template-columns: 1fr; gap: 24px;
+    }
+    .split-card {
+      background: linear-gradient(180deg, rgba(30,41,59,0.5), rgba(22,35,63,0.5));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+    .split-card .role {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+      color: #60A5FA; margin-bottom: 12px;
+    }
+    .split-card.driver .role { color: #4ADE80; }
+    .split-card h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .split-card > p { color: var(--muted); margin-bottom: 20px; font-size: 0.95rem; }
+
+    /* Steps */
+    .steps { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .step {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: linear-gradient(180deg, rgba(30,41,59,0.45), rgba(22,35,63,0.45));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 22px;
+    }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+      background: var(--primary-soft); color: #60A5FA;
+      display: grid; place-items: center; font-weight: 800; font-size: 1rem;
+    }
+    .step h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .step p { color: var(--muted); font-size: 0.92rem; }
+    .install-note {
+      margin-top: 20px; padding: 16px 20px;
+      background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.18);
+      border-radius: 14px; color: #BFDBFE; font-size: 0.92rem;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .install-note svg { flex-shrink: 0; margin-top: 2px; color: #60A5FA; }
+
+    /* Privacy */
+    .privacy-content {
+      background: linear-gradient(180deg, rgba(30,41,59,0.4), rgba(22,35,63,0.4));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+    .privacy-content h3 {
+      font-size: 1.1rem; font-weight: 700; margin: 28px 0 10px; color: #fff;
+    }
+    .privacy-content h3:first-child { margin-top: 0; }
+    .privacy-content p, .privacy-content li {
+      color: var(--muted); font-size: 0.94rem; margin-bottom: 10px;
+    }
+    .privacy-content ul { padding-left: 20px; margin-bottom: 10px; }
+    .privacy-content li { margin-bottom: 6px; }
+    .privacy-content strong { color: var(--muted-2); }
+    .privacy-content a { color: #60A5FA; text-decoration: underline; text-underline-offset: 2px; }
+
+    /* Download CTA section */
+    .cta-section { padding: 56px 0 72px; }
+    .cta-box {
+      background: linear-gradient(135deg, rgba(30,41,59,0.7), rgba(22,35,63,0.7));
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 40px 28px;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+    }
+    .cta-box::before {
+      content: ""; position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-box h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 800; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .cta-box p { color: var(--muted); margin-bottom: 24px; max-width: 520px; font-size: 0.98rem; }
+    .cta-box .download-btn { margin-inline: auto; }
+
+    /* Footer */
+    footer {
+      padding: 28px 0 40px;
+      border-top: 1px solid rgba(148,163,184,0.08);
+      color: var(--muted); font-size: 0.88rem;
+      position: relative; z-index: 1;
+    }
+    .footer-inner {
+      width: min(100% - 32px, var(--max)); margin-inline: auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .footer-inner .brand { font-size: 1.1rem; }
+    .footer-inner .brand-logo { width: 30px; height: 30px; border-radius: 8px; }
+
+    /* Responsive */
+    @media (min-width: 720px) {
+      .grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: repeat(3, 1fr); }
+      .steps { grid-template-columns: repeat(3, 1fr); }
+      .split { grid-template-columns: repeat(2, 1fr); }
+      .hero-grid { grid-template-columns: 1fr 1fr; gap: 48px; }
+    }
+    @media (max-width: 719px) {
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding: 52px 0 40px; }
+      section { padding: 56px 0; }
+      .privacy-content, .split-card, .cta-box { padding: 24px; }
+      .mock-stats { grid-template-columns: repeat(3, 1fr); }
+      .mock-stat { padding: 10px 6px; }
+      .mock-stat .val { font-size: 0.95rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navegación -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#inicio" class="brand" aria-label="Link inicio">
+        <img src="public/img/link_logo.svg" alt="" class="brand-logo" aria-hidden="true">
+        <span>Link</span>
+      </a>
+      <div class="nav-links">
+        <a href="#que-es">Qué es</a>
+        <a href="#funciones">Funciones</a>
+        <a href="#instalar">Instalar</a>
+        <a href="#privacidad">Privacidad</a>
+        <a href="https://github.com/iaclaudeia656-cell/link/releases/latest/download/Link-debug.apk" class="nav-cta">Descargar</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 1. Inicio / Hero -->
+  <section class="hero" id="inicio">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-badge"><span class="dot"></span> Ubicación en tiempo real</div>
+          <h1>Muévete mejor con <span class="accent">Link</span></h1>
+          <p>La app que conecta pasajeros y conductores de bus en tiempo real. Consulta buses activos, ve su ubicación en el mapa, revisa horarios y pide tu parada desde tu celular.</p>
+
+          <div class="hero-actions">
+            <!-- Botón de descarga -->
+            <a class="download-btn" href="https://github.com/iaclaudeia656-cell/link/releases/latest/download/Link-debug.apk" aria-label="Descargar app para Android">
+              <span class="android-icon" aria-hidden="true">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5S11 23.33 11 22.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A5.84 5.84 0 0012 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31A5.983 5.983 0 006 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z" fill="#3DDC84"/>
+                </svg>
+              </span>
+              <span class="btn-text">
+                <span class="btn-title">Descargar app para Android</span>
+                <span class="btn-sub">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                  APK oficial · Última versión
+                </span>
+              </span>
+              <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+
+            <div class="version-pill" id="version-pill" aria-live="polite">
+              <span id="version-text">APK para Android</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="mock-map">
+            <div class="mock-map-grid"></div>
+            <div class="mock-road r1"></div>
+            <div class="mock-road r2"></div>
+            <div class="mock-road r3"></div>
+            <div class="mock-bus b1">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>
+            </div>
+            <div class="mock-bus b2">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>
+            </div>
+            <div class="mock-user"></div>
+          </div>
+          <div class="mock-stats">
+            <div class="mock-stat"><div class="val">En vivo</div><div class="lbl">Ubicación</div></div>
+            <div class="mock-stat"><div class="val">Rutas</div><div class="lbl">y horarios</div></div>
+            <div class="mock-stat"><div class="val">Paradas</div><div class="lbl">solicitadas</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Qué es Link -->
+  <section id="que-es">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-label">Qué es Link</div>
+        <h2 class="section-title">Una app para moverte con más información</h2>
+        <p class="section-desc">Link conecta pasajeros y conductores de bus en una misma plataforma. Los conductores comparten su ubicación mientras usan la app, y los pasajeros pueden ver buses activos, consultar rutas y horarios, y pedir parada desde el mapa.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 11.5 7.3 11.8a1 1 0 0 0 1.4 0C13 21.5 20 15.4 20 10a8 8 0 0 0-8-8z"/></svg>
+          </div>
+          <h3>Ubicación en tiempo real</h3>
+          <p>Visualiza buses activos en el mapa y consulta su posición cuando el conductor está compartiendo su ubicación.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+          <h3>Rutas y horarios</h3>
+          <p>Revisa la información del bus, su ruta, empresa, conductor y los horarios organizados por día.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Pasajeros y conductores</h3>
+          <p>Cada rol tiene herramientas propias: los pasajeros consultan y solicitan, los conductores gestionan y comparten.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 & 4. Funciones -->
+  <section id="funciones">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-label">Funciones</div>
+        <h2 class="section-title">Hecha para pasajeros y conductores</h2>
+        <p class="section-desc">Link organiza la experiencia según el rol de cada usuario, con funciones reales para el día a día del transporte.</p>
+      </div>
+
+      <div class="split">
+        <!-- Pasajeros -->
+        <div class="split-card">
+          <div class="role">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            Para pasajeros
+          </div>
+          <h3>Encuentra tu bus fácilmente</h3>
+          <p>Consulta información útil antes y durante tu viaje.</p>
+          <ul class="feature-list">
+            <li><span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Ver buses activos en el mapa en tiempo real.</span></li>
+            <li><span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Buscar por bus, placa, ruta, conductor o empresa.</span></li>
+            <li><span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Filtrar buses por empresa desde el buscador.</span></li>
+            <li><span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Ver detalles del bus: ruta, conductor, placa, empresa, estado, ocupación y próxima parada.</span></li>
+            <li><span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Pedir parada y ver el bus en el mapa desde los buses activos.</span></li>
+            <li><span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Consultar horarios por bus y ver la tabla de horarios por día.</span></li>
+            <li><span class="check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Usar tu ubicación para centrarte en el mapa y mejorar la experiencia.</span></li>
+          </ul>
+        </div>
+
+        <!-- Conductores -->
+        <div class="split-card driver">
+          <div class="role">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>
+            Para conductores
+          </div>
+          <h3>Gestiona tu ruta y tu bus</h3>
+          <p>Herramientas para operar tu servicio y mantener informados a los pasajeros.</p>
+          <ul class="feature-list">
+            <li><span class="check blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Compartir ubicación GPS en tiempo real mientras usas la app.</span></li>
+            <li><span class="check blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Ver tu cabina con mapa, estado GPS y solicitudes de parada.</span></li>
+            <li><span class="check blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Recibir solicitudes de pasajeros para subir o bajar del bus.</span></li>
+            <li><span class="check blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Gestionar tu ruta: nombre, punto de inicio y punto final.</span></li>
+            <li><span class="check blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Administrar información del bus: placa, capacidad y pasajeros a bordo.</span></li>
+            <li><span class="check blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Marcar el bus como lleno o en avería cuando sea necesario.</span></li>
+            <li><span class="check blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Configurar tu horario semanal con turnos por día.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Cómo instalar -->
+  <section id="instalar">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-label">Instalación</div>
+        <h2 class="section-title">Cómo instalar Link</h2>
+        <p class="section-desc">Descarga el APK oficial e instálalo en tu dispositivo Android en pocos pasos.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <h4>Descarga el APK</h4>
+            <p>Presiona el botón de descarga y guarda el archivo oficial de Link en tu teléfono Android.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <h4>Permite la instalación</h4>
+            <p>Abre el archivo descargado. Si Android te lo pide, permite instalar apps de esta fuente o “Instalar apps desconocidas”.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <h4>Instala y abre Link</h4>
+            <p>Completa la instalación, abre la app, crea tu cuenta o inicia sesión y comienza a usar Link.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-note">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+        <div><strong>Actualizaciones dentro de la app:</strong> las próximas actualizaciones de Link pueden aparecer directamente dentro de la aplicación, para que puedas descargar e instalar la versión más reciente sin tener que volver a esta página.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Política de privacidad -->
+  <section id="privacidad">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-label">Privacidad</div>
+        <h2 class="section-title">Política de privacidad</h2>
+        <p class="section-desc">Esta política describe cómo Link trata la información cuando usas la aplicación.</p>
+      </div>
+
+      <div class="privacy-content">
+        <h3>1. Información que recopilamos</h3>
+        <p>Link puede recopilar y procesar la siguiente información, según el uso que hagas de la app:</p>
+        <ul>
+          <li><strong>Datos de cuenta:</strong> nombre de usuario y datos necesarios para crear e iniciar sesión en tu cuenta mediante Firebase Authentication.</li>
+          <li><strong>Datos de perfil y uso:</strong> información que guardas en la app, como rol de usuario (pasajero o conductor), datos del bus, ruta, horarios, solicitudes de parada y otros datos operativos relacionados con el servicio.</li>
+          <li><strong>Ubicación:</strong> la app usa la ubicación del dispositivo para funciones relacionadas con el servicio.</li>
+        </ul>
+
+        <h3>2. Uso de la ubicación</h3>
+        <p>La ubicación se utiliza solo para funciones necesarias de Link:</p>
+        <ul>
+          <li><strong>Conductores:</strong> cuando el conductor usa la app y comparte su ubicación, Link puede enviar la posición GPS del bus en tiempo real para que los pasajeros puedan verlo en el mapa. Cuando la app pasa a segundo plano, se cierra o el conductor sale, el bus puede dejar de mostrarse como activo.</li>
+          <li><strong>Pasajeros:</strong> la app puede usar la ubicación del pasajero para mostrar su posición en el mapa, centrar el mapa en “Mi ubicación” y mejorar funciones relacionadas con la visualización y solicitud de paradas.</li>
+        </ul>
+        <p>Puedes controlar los permisos de ubicación desde los ajustes de tu dispositivo Android. Si desactivas la ubicación, algunas funciones de la app pueden no funcionar correctamente.</p>
+
+        <h3>3. Servicios de Firebase</h3>
+        <p>Link utiliza servicios de Firebase para operar la aplicación:</p>
+        <ul>
+          <li><strong>Firebase Authentication:</strong> para la creación de cuentas, inicio de sesión y gestión de acceso.</li>
+          <li><strong>Firebase Realtime Database:</strong> para guardar y sincronizar datos de la app, como cuentas, perfiles, buses, rutas, horarios, ubicaciones en tiempo real y solicitudes de parada.</li>
+        </ul>
+        <p>Estos datos se almacenan en la infraestructura de Firebase/Google conforme a sus propios términos y políticas de servicio.</p>
+
+        <h3>4. Compartición de datos</h3>
+        <p><strong>Link no vende tus datos personales a terceros.</strong> La información solo se usa para el funcionamiento de la app y puede ser visible dentro de la propia aplicación cuando es necesario para el servicio. Por ejemplo, los pasajeros pueden ver información operativa de buses activos, como ruta, conductor, placa, estado u ubicación en tiempo real compartida por el conductor.</p>
+
+        <h3>5. Conservación y eliminación</h3>
+        <p>Conservamos los datos mientras sean necesarios para proporcionar el servicio y operar la app. Puedes solicitar la eliminación de tu cuenta y de los datos asociados contactándonos por correo electrónico.</p>
+        <p><strong>Correo de contacto para solicitudes de privacidad o eliminación de datos:</strong> <a href="mailto:TU_CORREO@ejemplo.com">TU_CORREO@ejemplo.com</a></p>
+
+        <h3>6. Seguridad</h3>
+        <p>Aplicamos medidas razonables para proteger la información dentro de la app y sus servicios asociados. Sin embargo, ningún sistema de transmisión o almacenamiento es completamente seguro, por lo que no podemos garantizar seguridad absoluta.</p>
+
+        <h3>7. Cambios a esta política</h3>
+        <p>Podemos actualizar esta política de privacidad cuando la app cambie o sea necesario. La versión vigente estará disponible en esta página.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Botón final -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box">
+        <h2>Descarga Link en tu Android</h2>
+        <p>Instala la APK oficial y comienza a usar Link para ver buses, rutas y horarios en tiempo real.</p>
+        <a class="download-btn" href="https://github.com/iaclaudeia656-cell/link/releases/latest/download/Link-debug.apk" aria-label="Descargar app para Android">
+          <span class="android-icon" aria-hidden="true">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none">
+              <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5S11 23.33 11 22.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A5.84 5.84 0 0012 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31A5.983 5.983 0 006 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z" fill="#3DDC84"/>
+            </svg>
+          </span>
+          <span class="btn-text">
+            <span class="btn-title">Descargar app para Android</span>
+            <span class="btn-sub">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              APK oficial · Última versión
+            </span>
+          </span>
+          <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <div class="version-pill" id="version-pill-bottom" aria-live="polite" style="margin-top:14px;">
+          <span id="version-text-bottom">Descarga directa desde GitHub Releases</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <a href="#inicio" class="brand" aria-label="Link inicio">
+        <img src="public/img/link_logo.svg" alt="" class="brand-logo" aria-hidden="true">
+        <span>Link</span>
+      </a>
+      <div>© <span id="year"></span> Link. Todos los derechos reservados.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Año actual
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Cargar versión desde update.json (si falla, la página se ve igual)
+    (async function loadUpdateInfo() {
+      const url = 'https://raw.githubusercontent.com/iaclaudeia656-cell/link/main/update.json';
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const version = (data && typeof data.versionName === 'string') ? data.versionName.trim() : '';
+        const notes = (data && typeof data.notes === 'string') ? data.notes.trim() : '';
+        if (!version) return;
+
+        const top = document.getElementById('version-text');
+        const bottom = document.getElementById('version-text-bottom');
+        const versionHtml = 'Versión actual <span class="v-badge">v' + escapeHtml(version) + '</span>' + (notes ? '<span> · ' + escapeHtml(notes) + '</span>' : '');
+        if (top) top.innerHTML = versionHtml;
+        if (bottom) bottom.innerHTML = 'Versión actual <span class="v-badge">v' + escapeHtml(version) + '</span>';
+      } catch (_) {
+        // Silencioso: la página debe verse igual sin estos datos.
+      }
+    })();
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+  </script>
+</body>
+</html>
