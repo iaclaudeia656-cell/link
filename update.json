@@ -1,7 +1,7 @@
 {
-  "versionCode": 6,
-  "versionName": "1.5",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.5/Link-debug.apk",
-  "notes": "Login estable con teclado (no se cierra al escribir), imagen de fondo en el login, sesión persistente hasta cerrar sesión o actualizar la app, y guardado de foto de perfil corregido.",
+  "versionCode": 7,
+  "versionName": "1.6",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.6/Link-debug.apk",
+  "notes": "Login corregido: el botón ya responde y muestra errores; sesión guardada en SharedPreferences nativas y persistente hasta cerrar sesión; botón de sesión guardada eliminado; teclado e imagen de fondo del login estables.",
   "required": false
 }
