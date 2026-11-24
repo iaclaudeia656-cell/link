@@ -1,7 +1,7 @@
 {
-  "versionCode": 4,
-  "versionName": "1.3",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.3/Link-debug.apk",
-  "notes": "Choferes ven solo buses de su empresa y pasajeros que piden parada; buscadores por nombre de bus, placa, nombre/apellido y usuario; foto de perfil persistente; sesión conservada al cerrar la app.",
+  "versionCode": 5,
+  "versionName": "1.4",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.4/Link-debug.apk",
+  "notes": "Corregido inicio del pasajero; sesión persistente hasta cerrar sesión; guardado de foto de perfil en Supabase y Firebase.",
   "required": false
 }
