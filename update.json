@@ -1,7 +1,7 @@
 {
-  "versionCode": 3,
-  "versionName": "1.2",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.2/Link-debug.apk",
-  "notes": "Corrección para seleccionar foto de perfil desde la app.",
+  "versionCode": 4,
+  "versionName": "1.3",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.3/Link-debug.apk",
+  "notes": "Choferes ven solo buses de su empresa y pasajeros que piden parada; buscadores por nombre de bus, placa, nombre/apellido y usuario; foto de perfil persistente; sesión conservada al cerrar la app.",
   "required": false
 }
