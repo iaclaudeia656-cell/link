@@ -1,7 +1,7 @@
 {
-  "versionCode": 9,
-  "versionName": "1.8",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.8/Link-debug.apk",
-  "notes": "Mapa de pasajero y chofer solo con buses y su nombre; al tocar un bus el pasajero puede pedir parada y el chofer no; el pasajero ya ve el horario del conductor.",
+  "versionCode": 10,
+  "versionName": "1.9",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.9/Link-debug.apk",
+  "notes": "El icono del bus solo muestra su nombre; se restauraron mi ubicación, rutas, paradas y solicitudes en el mapa. El pasajero puede pedir parada al tocar el bus y el chofer no.",
   "required": false
 }
