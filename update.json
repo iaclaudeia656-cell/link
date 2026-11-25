@@ -1,7 +1,7 @@
 {
-  "versionCode": 10,
-  "versionName": "1.9",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.9/Link-debug.apk",
-  "notes": "El icono del bus solo muestra su nombre; se restauraron mi ubicación, rutas, paradas y solicitudes en el mapa. El pasajero puede pedir parada al tocar el bus y el chofer no.",
+  "versionCode": 12,
+  "versionName": "2.1",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v2.1/Link-debug.apk",
+  "notes": "Corrige el login: recupera perfiles guardados con otra clave o solo en caché, crea perfil mínimo cuando falta y evita nombres de usuario duplicados. Corrige una escritura REST que podía borrar otros perfiles. Mantiene la separación de roles y el GPS real.",
   "required": false
 }
