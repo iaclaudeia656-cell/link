@@ -1,7 +1,7 @@
 {
-  "versionCode": 24,
-  "versionName": "3.3",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v3.3/Link-debug.apk",
-  "notes": "Quiero bajar ya no pide elegir parada: al tocarlo sale solo '¿Estás seguro?' y el chofer recibe el aviso al instante con sonido rojo usando tu GPS real. La presencia del chofer ahora se nota rápido: aparece activo apenas entra y sale inactivo en segundos al cerrar la app (latido nativo + timeout de 20 s). Mantiene las correcciones de v3.2.",
+  "versionCode": 25,
+  "versionName": "3.4",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v3.4/Link-debug.apk",
+  "notes": "Al marcar el chofer una bajada como Atendido, el botón rojo 'Quiero bajar' se quita y vuelve el azul 'Quiero subir'. Los buses ya no aparecen y desaparecen en el mapa del pasajero mientras el chofer está dentro de la app: la desconexión rápida sigue siendo por 'Salir'/cerrar la app, no por latidos retrasados.",
   "required": false
 }
