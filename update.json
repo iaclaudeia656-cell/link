@@ -1,7 +1,7 @@
 {
-  "versionCode": 26,
-  "versionName": "3.5",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v3.5/Link-debug.apk",
-  "notes": "Salida del chofer más rápida: el PATCH nativo a Firebase renueva el token vencido y se dispara también desde 'Salir'. Los buses desconectados vuelven a ocultarse del mapa del pasajero (sin icono amarillo). El latido nativo sigue cada 5 s y el timeout bajó a 30 s.",
+  "versionCode": 27,
+  "versionName": "3.6",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v3.6/Link-debug.apk",
+  "notes": "El mapa del chofer llega hasta los bordes de la pantalla. Al tener una solicitud de subida activa, ese bus se fija de primero y los demás botones 'Quiero subir' se desactivan hasta que el chofer marca Atendido. La tarjeta para cancelar la solicitud queda fija, sin animación ni saltos al actualizarse.",
   "required": false
 }
