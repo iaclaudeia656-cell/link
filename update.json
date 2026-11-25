@@ -1,7 +1,7 @@
 {
-  "versionCode": 8,
-  "versionName": "1.7",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.7/Link-debug.apk",
-  "notes": "Corregido el rebote al login después de iniciar sesión: se usa la sesión cacheada al entrar, el token REST tiene prioridad y los perfiles sin rol se abren como pasajero.",
+  "versionCode": 9,
+  "versionName": "1.8",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.8/Link-debug.apk",
+  "notes": "Mapa de pasajero y chofer solo con buses y su nombre; al tocar un bus el pasajero puede pedir parada y el chofer no; el pasajero ya ve el horario del conductor.",
   "required": false
 }
