@@ -1,7 +1,7 @@
 {
-  "versionCode": 14,
-  "versionName": "2.3",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v2.3/Link-debug.apk",
-  "notes": "Corrige el login: recupera perfiles guardados con otra clave o solo en caché, crea perfil mínimo cuando falta y evita nombres de usuario duplicados. Corrige una escritura REST que podía borrar otros perfiles. Mantiene la separación de roles y el GPS real.",
+  "versionCode": 15,
+  "versionName": "2.4",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v2.4/Link-debug.apk",
+  "notes": "Corrige que un bus apareciera activo aunque el chofer no esté dentro de la app: ahora se muestra Chofer no conectado con su última posición GPS real y se desactiva Pedir parada. La foto de perfil se lee del perfil remoto antes de mostrarse. Mantiene login corregido, usuarios sin duplicados, roles separados y GPS real.",
   "required": false
 }
