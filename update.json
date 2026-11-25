@@ -1,7 +1,7 @@
 {
-  "versionCode": 13,
-  "versionName": "2.2",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v2.2/Link-debug.apk",
+  "versionCode": 14,
+  "versionName": "2.3",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v2.3/Link-debug.apk",
   "notes": "Corrige el login: recupera perfiles guardados con otra clave o solo en caché, crea perfil mínimo cuando falta y evita nombres de usuario duplicados. Corrige una escritura REST que podía borrar otros perfiles. Mantiene la separación de roles y el GPS real.",
   "required": false
 }
