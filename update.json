@@ -1,7 +1,7 @@
 {
-  "versionCode": 25,
-  "versionName": "3.4",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v3.4/Link-debug.apk",
-  "notes": "Al marcar el chofer una bajada como Atendido, el botón rojo 'Quiero bajar' se quita y vuelve el azul 'Quiero subir'. Los buses ya no aparecen y desaparecen en el mapa del pasajero mientras el chofer está dentro de la app: la desconexión rápida sigue siendo por 'Salir'/cerrar la app, no por latidos retrasados.",
+  "versionCode": 26,
+  "versionName": "3.5",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v3.5/Link-debug.apk",
+  "notes": "Salida del chofer más rápida: el PATCH nativo a Firebase renueva el token vencido y se dispara también desde 'Salir'. Los buses desconectados vuelven a ocultarse del mapa del pasajero (sin icono amarillo). El latido nativo sigue cada 5 s y el timeout bajó a 30 s.",
   "required": false
 }
