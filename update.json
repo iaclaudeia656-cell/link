@@ -1,7 +1,7 @@
 {
-  "versionCode": 23,
-  "versionName": "3.2",
-  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v3.2/Link-debug.apk",
-  "notes": "El pasajero ahora ve 'Quiero bajar' en vez de 'Pedir parada'. Al enviarlo, el chofer recibe un aviso inmediato con sonido rojo sin esperar a estar a 50 m. Corregido el estado 'Inactivo' en Horarios: los buses activos se reconocen por el latido de presencia del chofer, no por un GPS viejo. Mantiene la corrección del toque al bus en el mapa de la v3.1.",
+  "versionCode": 24,
+  "versionName": "3.3",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v3.3/Link-debug.apk",
+  "notes": "Quiero bajar ya no pide elegir parada: al tocarlo sale solo '¿Estás seguro?' y el chofer recibe el aviso al instante con sonido rojo usando tu GPS real. La presencia del chofer ahora se nota rápido: aparece activo apenas entra y sale inactivo en segundos al cerrar la app (latido nativo + timeout de 20 s). Mantiene las correcciones de v3.2.",
   "required": false
 }
