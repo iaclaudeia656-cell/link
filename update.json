@@ -1,6 +1,6 @@
 {
-  "versionCode": 16,
-  "versionName": "2.5",
+  "versionCode": 17,
+  "versionName": "2.6",
   "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v2.5/Link-debug.apk",
   "notes": "El mapa del pasajero ya no dibuja buses cuyo chofer no está conectado; la lista sigue mostrando Chofer no conectado con la última posición GPS real. La foto de perfil se lee del perfil remoto antes de mostrarse. Mantiene login corregido, usuarios sin duplicados, roles separados y GPS real.",
   "required": false
