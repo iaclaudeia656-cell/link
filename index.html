@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <script>document.documentElement.classList.add("js")</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f8f9fa">
@@ -312,6 +313,39 @@
     }
     .footer-inner .brand { font-size: 1.05rem; }
     .footer-inner .brand-logo { width: 28px; height: 28px; border-radius: 6px; }
+
+
+    /* Animaciones al hacer scroll */
+    .scroll-progress {
+      position: fixed; top: 0; left: 0; height: 3px; width: 100%;
+      background: var(--primary); transform: scaleX(0); transform-origin: 0 50%;
+      z-index: 100; pointer-events: none;
+    }
+    .nav { transition: box-shadow .25s ease, background .25s ease; }
+    .nav.scrolled { box-shadow: 0 1px 3px rgba(60,64,67,.2), 0 2px 8px rgba(60,64,67,.08); }
+
+    .js .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+      transition-delay: var(--d, 0s);
+      will-change: opacity, transform;
+    }
+    .js .reveal.from-right { transform: translateX(48px) scale(.97); }
+    .js .reveal.from-left  { transform: translateX(-32px); }
+    .js .reveal.zoom       { transform: scale(.94); }
+    .js .reveal.above { transform: translateY(-28px); }
+    .js .reveal.in { opacity: 1; transform: none; }
+    .js .card.reveal.in:hover, .js .step.reveal.in:hover { transform: translateY(-4px); transition-delay: 0s; }
+
+    .card, .step, .split-card { transition: box-shadow .25s ease, transform .25s ease, opacity .8s cubic-bezier(.2,.7,.2,1); }
+    .js .card.reveal.in, .js .step.reveal.in { transition: box-shadow .25s ease, transform .25s ease, opacity .8s; }
+    .card:hover, .step:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .hero-mockup { transition: transform .4s ease; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .js .reveal, .js .reveal.in { opacity: 1 !important; transform: none !important; }
+      .scroll-progress { display: none; }
+    }
 
     /* Responsive */
     @media (min-width: 720px) {
@@ -646,6 +680,83 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
     }
+
+    // Animaciones al hacer scroll
+    (function initScrollEffects() {
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Barra de progreso + sombra del menú
+      var bar = document.createElement('div');
+      bar.className = 'scroll-progress';
+      bar.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(bar);
+      var nav = document.querySelector('.nav');
+      var ticking = false;
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          var max = document.documentElement.scrollHeight - window.innerHeight;
+          var y = window.scrollY || 0;
+          bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(y / max, 1) : 0) + ')';
+          if (nav) nav.classList.toggle('scrolled', y > 8);
+          ticking = false;
+        });
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      if (reduce || !('IntersectionObserver' in window)) return;
+
+      // Qué elementos animar y con qué retraso (efecto escalonado)
+      function mark(sel, opts) {
+        opts = opts || {};
+        document.querySelectorAll(sel).forEach(function (el, i) {
+          el.classList.add('reveal');
+          if (opts.cls) el.classList.add(opts.cls);
+          var idx = opts.stagger ? Array.prototype.indexOf.call(el.parentNode.children, el) : 0;
+          el.style.setProperty('--d', ((opts.base || 0) + idx * (opts.step || 0.1)) + 's');
+        });
+      }
+      mark('.hero-badge', { base: 0.05 });
+      mark('.hero h1', { base: 0.15 });
+      mark('.hero p', { base: 0.25 });
+      mark('.hero-actions', { base: 0.35 });
+      mark('.hero-visual', { cls: 'from-right', base: 0.2 });
+      mark('.section-head > *', { stagger: true, step: 0.1 });
+      mark('.grid-3 > .card', { stagger: true, step: 0.12 });
+      mark('.split-card', { stagger: true, step: 0.15 });
+      mark('.steps > .step', { stagger: true, step: 0.12 });
+      mark('.install-note');
+      mark('.privacy-content');
+      mark('.cta-box', { cls: 'zoom' });
+
+      // Se anima cada vez que entra a la pantalla (al bajar y al subir)
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var el = e.target;
+          if (e.intersectionRatio >= 0.12) {
+            el.classList.add('in');
+          } else if (!e.isIntersecting) {
+            // Sale por arriba (bajando) o por abajo (subiendo):
+            // así, al volver, entra desde el lado correcto.
+            var exitedTop = e.boundingClientRect.top < 0;
+            el.classList.toggle('above', exitedTop);
+            el.classList.remove('in');
+          }
+        });
+      }, { threshold: [0, 0.12], rootMargin: '0px 0px -6% 0px' });
+      document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+      // Efecto parallax suave en la maqueta del hero
+      var mock = document.querySelector('.hero-mockup');
+      if (mock) {
+        window.addEventListener('scroll', function () {
+          var y = Math.min(window.scrollY, 600);
+          mock.style.transform = 'translateY(' + (y * 0.06) + 'px)';
+        }, { passive: true });
+      }
+    })();
   </script>
 </body>
 </html>
