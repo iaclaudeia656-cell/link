@@ -1,0 +1,7 @@
+{
+  "versionCode": 1,
+  "versionName": "1.0",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.0-driver/LinkChofer-debug-v1.0.apk",
+  "notes": "Link Chofer: app independiente solo para conductores. Incluye GPS real, latido nativo de presencia, cabina sin buscador de pasajeros y actualización automática propia.",
+  "required": false
+}

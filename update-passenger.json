@@ -1,0 +1,7 @@
+{
+  "versionCode": 1,
+  "versionName": "1.0",
+  "apkUrl": "https://github.com/iaclaudeia656-cell/link/releases/download/v1.0-passenger/LinkPasajero-debug-v1.0.apk",
+  "notes": "Link Pasajero: app independiente solo para pasajeros. Incluye mapa en tiempo real, solicitudes de subida y bajada, alertas de proximidad y actualización automática propia.",
+  "required": false
+}
